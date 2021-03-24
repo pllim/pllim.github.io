@@ -19,10 +19,10 @@ table, th, td {
 async function queryJdtalk() {
   try {
     let jdText = document.getElementById("jdText").value;
-    const headers = {'user-agent': 'bingo-maker/0.1.0',
-                    'Access-Control-Allow-Origin': '*'};
+    const headers = {'user-agent': 'bingo-maker/0.1.0'};
     const url = `https://brokentoolchain.com/jdtalk/?pattern=${jdText}&exact=true&limit=24`;
     console.log(`Querying ${url}`);
+    document.getElementById('result').innerHTML = "Querying jdtalk...";
 
     let response = await fetch(url, {headers: headers});
     let data = await response.text();
@@ -30,9 +30,12 @@ async function queryJdtalk() {
 
     if (data.length > 0) {
       console.log(`Data: ${data}`);
-      // TODO: Turn data into array and insert into bingo card.
-      // jdtalk needs to fix CORS first.
-      body = `<table>
+
+      if (data.startsWith("Word not available in dictionary")) {
+        body = data;
+      } else {
+        let cardItems = data.split("\n");
+        body = `<table>
 <tr>
   <td height="100" width="100">${cardItems[0]}</td>
   <td width="100">${cardItems[1]}</td>
@@ -69,6 +72,7 @@ async function queryJdtalk() {
   <td>${cardItems[23]}</td>
 </tr>
 </table>`;
+      }
     }
 
     document.getElementById('result').innerHTML = body;
