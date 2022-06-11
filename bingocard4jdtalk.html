@@ -13,29 +13,60 @@ table, th, td {
 </head>
 
 <body>
-
 <script>
+
+function render(str) {
+  document.getElementById('result').innerHTML = str;
+}
 
 async function queryJdtalk() {
   try {
     let jdText = document.getElementById("jdText").value;
-    const headers = {'user-agent': 'bingo-maker/0.1.0'};
-    const url = `https://www.einval.net/jdtalk/?pattern=${jdText}&exact=true&limit=24`;
-    console.log(`Querying ${url}`);
-    document.getElementById('result').innerHTML = "Querying jdtalk...";
+    let args = ""
+    var options = ["jdExact", "jdHeart", "jdShuffle", "jdReverse", "jdTitleCase", "jdHillCase", "jdRandomCase", "jdLeet"];
 
+    for (const opt of options) {
+      var elem = document.getElementById(opt);
+      if (elem && elem.checked) {
+        console.log(`appending argument: ${opt}`);
+        args += `&${elem.name}`
+      }
+    }
+
+    // Accept only alphanumeric characters (and hyphens)
+    if (!jdText.match(/^[0-9a-zA-Z-]+$/)) {
+      render("Invalid search pattern")
+      return;
+    }
+
+    let url = `https://www.einval.net/jdtalk/?pattern=${jdText}&limit=24${args}`
+    console.log(`Querying ${url}`);
+    render("Querying jdtalk...");
+
+    const headers = {'user-agent': 'bingo-maker/0.1.0'};
     let response = await fetch(url, {headers: headers});
     let data = await response.text();
-    let body = "Ops, something went wrong!";
+    let body = "Oops, something went wrong!";
 
-    if (data.length > 0) {
-      console.log(`Data: ${data}`);
+    if (data && !data.length) {
+      render("No data received!");
+      return;
+    }
+    console.log(`Data: ${data}`);
 
-      if (data.startsWith("Word not available in dictionary")) {
-        body = data;
-      } else {
-        let cardItems = data.split("\n");
-        body = `<table>
+    // Trap jdtalk errors from output
+    if (data.match(/^Word not found in dictionary:.*/)
+      || data.match(/.*too long for heart mode.*/)
+      || data.match(/^Invalid format:.*/) 
+      || data.match(/^Word will never appear in acronym.*/)
+      || data.match(/^Unknown argument:.*/)) {
+      render(data);
+      return;
+    }
+
+    // Render bingo card
+    let cardItems = data.split("\n");
+    body = `<table>
 <tr>
   <td height="100" width="100">${cardItems[0]}</td>
   <td width="100">${cardItems[1]}</td>
@@ -72,17 +103,14 @@ async function queryJdtalk() {
   <td>${cardItems[23]}</td>
 </tr>
 </table>`;
-      }
-    }
-
-    document.getElementById('result').innerHTML = body;
+    render(body);
   } catch(e) {
     console.log(e);
-    document.getElementById('result').innerHTML = "Ops, something went wrong!";
+    render("Oops, something went wrong!");
   }
 }
-
 </script>
+
 
 <h1>Get your bingo card from jdtalk</h1>
 
@@ -92,13 +120,80 @@ async function queryJdtalk() {
   responsibility of the content returned by <i>jdtalk</i>.)</p>
 
 <!-- Text box -->
-<input type="text" id="jdText" value="meat"/>
+<div>
+  <fieldset>
+    <legend>Search pattern</legend>
+    <div>
+      <input type="text" id="jdText" value="meat"/>
+      <label for="jdtext"></label>
+    </div>
+  </fieldset>
+</div>
+
+<!-- Options -->
+<div>
+  <fieldset>
+    <legend>Options</legend>
+    <div>
+      <input type="checkbox" id="jdExact" name="exact" checked/>
+      <label for="jdExact">Exact match</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdRandomCase" name="rcase"/>
+      <label for="jdRandomCase">Random case</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdHillCase" name="hcase"/>
+      <label for="jdHillCase">Hill case</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdTitleCase" name="tcase"/>
+      <label for="jdTitleCase">Title case</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdLeet" name="leet"/>
+      <label for="jdLeet">1337 string</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdReverse" name="reverse"/>
+      <label for="reverse">Reverse string</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdShuffle" name="shuffle"/>
+      <label for="jdShuffle">Shuffle string</label>
+    </div>
+
+    <div>
+      <input type="checkbox" id="jdHeart" name="heart"/>
+      <label for="jdHeart">Heart candy string</label>
+    </div>
+  </fieldset>
+</div>
 
 <!-- A button to randomly generate a card -->
-<button type="button" onclick="queryJdtalk();">Generate bingo card</button>
+<button type="button" id="queryButton" onclick="queryJdtalk();">Generate bingo card</button>
 
 <!-- Render generated card for user to print, FREE space in middle -->
 <p id="result"></p>
+
+<script>
+// Submit query when user presses enter
+var kbd = document.getElementById("jdText");
+if (kbd) {
+  kbd.addEventListener("keypress", function(event) {
+    if (event.keyCode === 13) { // 13 = Enter key
+      event.preventDefault();
+      document.getElementById("queryButton").click();
+    }
+  });
+}
+</script>
 
 </body>
 </html>
