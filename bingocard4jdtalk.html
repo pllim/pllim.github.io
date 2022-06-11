@@ -20,7 +20,7 @@ async function queryJdtalk() {
   try {
     let jdText = document.getElementById("jdText").value;
     const headers = {'user-agent': 'bingo-maker/0.1.0'};
-    const url = `https://einval.net/jdtalk/?pattern=${jdText}&exact=true&limit=24`;
+    const url = `https://www.einval.net/jdtalk/?pattern=${jdText}&exact=true&limit=24`;
     console.log(`Querying ${url}`);
     document.getElementById('result').innerHTML = "Querying jdtalk...";
 
