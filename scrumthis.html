@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<title>Are we Scrum yet?</title>
+<style>
+p2 {
+  color: red;
+  font-size: 30px;
+}
+div {
+  background-color: lightgrey;
+  width: 100px;
+  border: 10px solid red;
+  padding: 50px;
+  margin: 20px;
+  text-align: center;
+}
+table, th, td {
+  border: 1px solid black;
+  text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<script>
+// Some choices to choose from
+var possible_story_points = [
+  "1",
+  "2",
+  "3",
+  "5",
+  "8",
+  "13",
+  "999"];
+
+function generateStoryPoint() {
+  const j = Math.floor(Math.random() * possible_story_points.length);
+  return possible_story_points[j]
+}
+</script>
+
+<h1>Get your story point here!</h1>
+
+<!-- User instructions -->
+<p>Click the button below to find out how many story points your JIRA ticket is worth.</p>
+
+<p>
+<table>
+  <tr><th colspan="2">Jesse's rule-of-thumb</th></tr>
+  <tr><th>Points</th><th>Meaning</th></tr>
+  <tr><td>13</td><td>Full sprint</td></tr>
+  <tr><td>8</td><td>A bit more than half a sprint</td></tr>
+  <tr><td>5</td><td>A few days</td></tr>
+  <tr><td>3</td><td>A day or two</td></tr>
+  <tr><td>2</td><td>Half a day</td></tr>
+  <tr><td>1</td><td>An hour</td></tr>
+</table>
+</p>
+
+<!-- A button to randomly generate story point -->
+<button type="button"
+onclick="document.getElementById('result').innerHTML = generateStoryPoint();">
+Tell me, O' Wise One</button>
+
+<!-- Render generated story point -->
+<div><p2 id="result">?</p2></div>
+
+</body>
+</html>
