@@ -34,6 +34,10 @@ table, th, td {
 const possible_story_points = ["1", "2", "3", "5", "8", "13", "999"];
 const weights = [0.1, 0.1, 0.15, 0.2, 0.2, 0.2, 0.05];
 
+// I will motivate you
+const motivation = ["999"];
+const motivateUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
 // Preparing the cumulative weights array.
 // For example:
 // - weights = [1, 4, 3]
@@ -60,6 +64,15 @@ function generateStoryPoint() {
     }
   }
 }
+
+function motivate(story_points) {
+  // Convince the user to accept their story points
+  let result = story_points;
+  if (motivation.includes(story_points)) {
+    result = `<a href="${motivateUrl}" target="_blank">${story_points}</a>`;
+  }
+  return result;
+}
 </script>
 
 <h1>Get your story point here!</h1>
@@ -82,7 +95,7 @@ function generateStoryPoint() {
 
 <!-- A button to randomly generate story point -->
 <button type="button"
-onclick="document.getElementById('result').innerHTML = generateStoryPoint();">
+onclick="document.getElementById('result').innerHTML = motivate(generateStoryPoint());">
 Tell me, O' Wise One</button>
 
 <!-- Render generated story point -->
