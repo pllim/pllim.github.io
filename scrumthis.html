@@ -69,7 +69,7 @@ function motivate(story_points) {
   // Convince the user to accept their story points
   let result = story_points;
   if (motivation.includes(story_points)) {
-    result = `<a href="${motivateUrl}">${story_points}</a>`;
+    result = `<a href="${motivateUrl}" target="_blank">${story_points}</a>`;
   }
   return result;
 }
