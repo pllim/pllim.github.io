@@ -6,11 +6,13 @@
 <style>
 p2 {
   color: red;
-  font-size: 30px;
+  font-size: 36px;
+  text-shadow: 1px 1px white;
 }
 div {
-  background-color: lightgrey;
+  background-image: url('img/fibb_dice.jpg');
   width: 100px;
+  height: 100px;
   border: 10px solid red;
   padding: 50px;
   margin: 20px;
@@ -26,19 +28,37 @@ table, th, td {
 <body>
 
 <script>
-// Some choices to choose from
-var possible_story_points = [
-  "1",
-  "2",
-  "3",
-  "5",
-  "8",
-  "13",
-  "999"];
+// Weighted randomness: https://dev.to/trekhleb/weighted-random-algorithm-in-javascript-1pdc
+
+// Some choices to choose from.
+const possible_story_points = ["1", "2", "3", "5", "8", "13", "999"];
+const weights = [0.1, 0.1, 0.15, 0.2, 0.2, 0.2, 0.05];
+
+// Preparing the cumulative weights array.
+// For example:
+// - weights = [1, 4, 3]
+// - cumulativeWeights = [1, 5, 8]
+const cumulativeWeights = [];
+for (let i = 0; i < weights.length; i += 1) {
+  cumulativeWeights[i] = weights[i] + (cumulativeWeights[i - 1] || 0);
+}
+const maxCumulativeWeight = cumulativeWeights[cumulativeWeights.length - 1];
 
 function generateStoryPoint() {
-  const j = Math.floor(Math.random() * possible_story_points.length);
-  return possible_story_points[j]
+  // Getting the random number in a range of [0...sum(weights)]
+  // For example:
+  // - weights = [1, 4, 3]
+  // - maxCumulativeWeight = 8
+  // - range for the random number is [0...8]
+  const randomNumber = maxCumulativeWeight * Math.random();
+
+  // Picking the random item based on its weight.
+  // The items with higher weight will be picked more often.
+  for (let i = 0; i < possible_story_points.length; i += 1) {
+    if (cumulativeWeights[i] >= randomNumber) {
+      return possible_story_points[i];
+    }
+  }
 }
 </script>
 
