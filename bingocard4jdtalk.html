@@ -34,7 +34,7 @@ async function queryJdtalk() {
     }
 
     // Accept only alphanumeric characters (and hyphens)
-    if (!jdText.match(/^[0-9a-zA-Z-]+$/)) {
+    if (!jdText.match(/^[0-9a-zA-Z-*]+$/)) {
       render("Invalid search pattern")
       return;
     }
@@ -120,64 +120,68 @@ async function queryJdtalk() {
   responsibility of the content returned by <i>jdtalk</i>.)</p>
 
 <!-- Text box -->
-<div>
-  <fieldset>
-    <legend>Search pattern</legend>
-    <div>
-      <input type="text" id="jdText" value="meat"/>
-      <label for="jdtext"></label>
-    </div>
-  </fieldset>
-</div>
+<div style="border: 2px solid lightgray; margin-top: 10px; padding: 5px;">
+  <div>
+    <fieldset>
+      <legend>Search pattern</legend>
+      <div>
+        <input type="text" id="jdText" value="meat"/>
+	<span style="font-size: 10pt;"><label for="jdtext">(hint: input "*" to disable pattern matching)</label></span>
+      </div>
+    </fieldset>
+  </div>
 
 <!-- Options -->
-<div>
-  <fieldset>
-    <legend>Options</legend>
-    <div>
-      <input type="checkbox" id="jdExact" name="exact" checked/>
-      <label for="jdExact">Exact match</label>
-    </div>
+  <div>
+    <fieldset>
+      <legend>Options</legend>
+      <div>
+        <input type="checkbox" id="jdExact" name="exact" checked/>
+        <label for="jdExact">Exact match</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdRandomCase" name="rcase"/>
-      <label for="jdRandomCase">Random case</label>
-    </div>
+      <div>
+        <input type="checkbox" id="jdRandomCase" name="rcase"/>
+        <label for="jdRandomCase">Random case</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdHillCase" name="hcase"/>
-      <label for="jdHillCase">Hill case</label>
-    </div>
+      <div>
+        <input type="checkbox" id="jdHillCase" name="hcase"/>
+        <label for="jdHillCase">Hill case</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdTitleCase" name="tcase"/>
-      <label for="jdTitleCase">Title case</label>
-    </div>
+      <div>
+        <input type="checkbox" id="jdTitleCase" name="tcase"/>
+        <label for="jdTitleCase">Title case</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdLeet" name="leet"/>
-      <label for="jdLeet">1337 string</label>
-    </div>
+      <div>
+        <input type="checkbox" id="jdLeet" name="leet"/>
+        <label for="jdLeet">1337 string</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdReverse" name="reverse"/>
-      <label for="reverse">Reverse string</label>
-    </div>
+      <div>
+        <input type="checkbox" id="jdReverse" name="reverse"/>
+        <label for="reverse">Reverse string</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdShuffle" name="shuffle"/>
-      <label for="jdShuffle">Shuffle string</label>
-    </div>
+      <div>
+        <input type="checkbox" id="jdShuffle" name="shuffle"/>
+        <label for="jdShuffle">Shuffle string</label>
+      </div>
 
-    <div>
-      <input type="checkbox" id="jdHeart" name="heart"/>
-      <label for="jdHeart">Heart candy string</label>
+      <div>
+        <input type="checkbox" id="jdHeart" name="heart"/>
+        <label for="jdHeart">Heart candy string</label>
+      </div>
+    </fieldset>
+
+    <div style="margin-top: 20px; margin-bottom: 10px;">
+      <!-- A button to randomly generate a card -->
+      <button type="button" id="queryButton" onclick="queryJdtalk();">Generate bingo card</button>
     </div>
-  </fieldset>
+  </div>
 </div>
-
-<!-- A button to randomly generate a card -->
-<button type="button" id="queryButton" onclick="queryJdtalk();">Generate bingo card</button>
 
 <!-- Render generated card for user to print, FREE space in middle -->
 <p id="result"></p>
@@ -194,6 +198,5 @@ if (kbd) {
   });
 }
 </script>
-
 </body>
 </html>
